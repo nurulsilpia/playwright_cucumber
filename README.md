@@ -1,8 +1,8 @@
-## run on your local mechine
+## run on your local machine.
 - clone this repository
 - npm install
 - npm test
-- open report file index.html on root folder
+- open report file index.html on root folder <br><br>
 
 ## report overview:
 
