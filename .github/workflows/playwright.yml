@@ -30,7 +30,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: TestResults
-        path: test-results
+        path: test-results/reports
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
