@@ -25,3 +25,15 @@ jobs:
         name: Report
         path: test-results
         retention-days: 2
+
+    - name: Archive Test Results
+      uses: actions/upload-artifact@v2
+      with:
+        name: TestResults
+        path: test-results
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./test-results/reports
