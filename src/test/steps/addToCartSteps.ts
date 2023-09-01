@@ -7,6 +7,7 @@ import { pageFixture } from "../../hooks/pageFixture";
 
 
 Given('user search for a {string}', async function (book) {
+    pageFixture.logger.info("Searching for a book "+book);
     await pageFixture.page.locator("input[type='search']").type(book);
     await pageFixture.page.waitForTimeout(2000);
     await pageFixture.page.locator("mat-option[role='option'] span").click();
