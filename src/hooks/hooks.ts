@@ -17,7 +17,11 @@ BeforeAll(async () => {
 
 Before(async function ({pickle}) {
     const scenarioName = pickle.name+pickle.id;
-    context = await browser.newContext();
+    context = await browser.newContext({
+        recordVideo: {
+            dir: "test-results/videos",
+        }
+    });
     const page = await browser.newPage();
     pageFixture.page = page;
     pageFixture.logger = createLogger(options(scenarioName));
@@ -29,24 +33,27 @@ Before(async function ({pickle}) {
 }); */
 
 After(async function ({ pickle, result }) {
-    console.log(result?.status);
-
+    let videoPath: string;
+    let img: Buffer;
     if (result?.status == Status.FAILED) {
-        const img = await pageFixture.page.screenshot({ path: `./test-results/screenshots/${pickle.name}.png`, type: "png" })
-        await this.attach(img, "image/png");
-
-        //attach video
-        const video = await pageFixture.page.video();
-        const videoPath = `./test-results/videos/${pickle.name}.webm`;
-        await video.saveAs(videoPath);
-        await this.attach(videoPath, "video/webm");
+        img = await pageFixture.page.screenshot({ path: `./test-results/screenshots/${pickle.name}.png`, type: "png" })
+        videoPath = await pageFixture.page.video().path();
     }
-
     await pageFixture.page.close();
     await context.close();
+    if (result?.status == Status.FAILED) {
+        await this.attach(
+            img, "image/png"
+        );
+        await this.attach(
+            fs.readFileSync(videoPath),
+            'video/webm'
+        );
+    }
+
 });
 
 AfterAll(async () => {
     await browser.close();
-    pageFixture.logger.close();
+    // pageFixture.logger.close();
 })
